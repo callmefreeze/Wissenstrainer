@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="de">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wissenstrainer</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HAUPTÜBERSCHRIFT
+         ===================================================== -->
+
+    <h1>Wissenstrainer</h1>
+
+
+    <!-- =====================================================
+         SITZUNGSSTATISTIK
+         ===================================================== -->
+
+    <div class="sitzungsstatistik">
+
+        <span>
+            Bearbeitet:
+            <strong id="bearbeitet">0</strong>
+        </span>
+
+        <span>
+            Richtig:
+            <strong id="richtig">0</strong>
+        </span>
+
+        <span>
+            Falsch:
+            <strong id="falsch">0</strong>
+        </span>
+
+        <span>
+            Quote:
+            <strong id="quote">0</strong> %
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         LERNMODUS
+         ===================================================== -->
+
+    <div class="lernmodus-bereich">
+
+        <div class="filter-gruppe">
+
+            <label for="lernmodusFilter">
+                Lernmodus
+            </label>
+
+            <select id="lernmodusFilter">
+
+                <option value="alle">
+                    Alle Fragen
+                </option>
+
+                <option value="fehler">
+                    Fehlerfragen
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTER
+         ===================================================== -->
+
+    <div class="filter-bereich">
+
+
+        <!-- RECHTSGEBIET -->
+
+        <div class="filter-gruppe">
+
+            <label for="rechtsgebietFilter">
+                Rechtsgebiet
+            </label>
+
+            <select id="rechtsgebietFilter">
+
+                <option value="alle">
+                    Alle Rechtsgebiete
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- THEMA -->
+
+        <div class="filter-gruppe">
+
+            <label for="themaFilter">
+                Thema
+            </label>
+
+            <select id="themaFilter">
+
+                <option value="alle">
+                    Alle Themen
+                </option>
+
+            </select>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         ANZAHL DER AUSGEWÄHLTEN FRAGEN
+         ===================================================== -->
+
+    <p class="filter-info">
+
+        <span id="anzahlFragen">
+            0
+        </span>
+
+        <span id="fragenText">
+            Fragen ausgewählt
+        </span>
+
+    </p>
+
+
+    <!-- =====================================================
+         BEREICHSÜBERSCHRIFT
+         ===================================================== -->
+
+    <h2 class="bereich-titel">
+        Frage
+    </h2>
+
+
+    <!-- =====================================================
+         LERNKARTE
+         ===================================================== -->
+
+    <div class="lernkarte">
+
+
+        <!-- RECHTSGEBIET UND THEMA -->
+
+        <div class="karten-info">
+
+            <span id="rechtsgebiet"></span>
+
+            <span class="trenner">
+                •
+            </span>
+
+            <span id="thema"></span>
+
+        </div>
+
+
+        <!-- FRAGE -->
+
+        <p id="frage"></p>
+
+
+        <!-- BISHERIGER LERNSTAND -->
+
+        <p class="fragen-statistik">
+
+            Bisher:
+
+            <span id="frageRichtig">
+                0
+            </span>
+
+            × richtig
+
+            |
+
+            <span id="frageFalsch">
+                0
+            </span>
+
+            × falsch
+
+        </p>
+
+
+        <!-- ANTWORT ANZEIGEN -->
+
+        <button id="antwortButton">
+
+            Antwort anzeigen
+
+        </button>
+
+
+        <!-- ANTWORT -->
+
+        <p
+            id="antwort"
+            style="display: none;"
+        ></p>
+
+
+        <!-- BEWERTUNG -->
+
+        <div
+            id="bewertung"
+            style="display: none;"
+        >
+
+            <button id="falschButton">
+                Falsch
+            </button>
+
+            <button id="richtigButton">
+                Richtig
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         LERNSTAND ZURÜCKSETZEN
+         ===================================================== -->
+
+    <div class="reset-bereich">
+
+        <button id="resetButton">
+            Lernstand zurücksetzen
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="fragen.js"></script>
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
