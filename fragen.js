@@ -136,8 +136,8 @@ const fragen = [
 
         frage: "Wie kann Politik definiert werden?",
 
+        antwort: "Politik beschreibt Prozesse, Verfahren und Strukturen, mit deren Hilfe Entscheidungen getroffen werden. Diese Entscheidungen sind für einen Teil der Gesellschaft oder die gesamte Gesellschaft verbindlich."
     },
-        antwort: "Politik beschreibt Prozesse, Verfahren und Strukturen, mit deren Hilfe Entscheidungen getroffen werden.
 
     {
         id: 13,
