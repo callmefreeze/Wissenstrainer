@@ -2,13 +2,24 @@
 // 1. VARIABLEN
 // =====================================================
 
+// Statistik der aktuellen Lernsitzung
+
 let anzahlRichtig = 0;
 
 let anzahlFalsch = 0;
 
+
+// Index der zuletzt angezeigten Frage
+
 let letzteFrage = -1;
 
+
+// Aktuell angezeigte Frage
+
 let aktuelleFrage;
+
+
+// Fragen, die momentan durch die Filter zugelassen sind
 
 let gefilterteFragen = fragen;
 
@@ -45,6 +56,8 @@ function filterInitialisieren() {
         document.getElementById("rechtsgebietFilter");
 
 
+    // Alle vorhandenen Rechtsgebiete sammeln
+
     const rechtsgebiete =
         [...new Set(
 
@@ -57,8 +70,12 @@ function filterInitialisieren() {
         )];
 
 
+    // Alphabetisch sortieren
+
     rechtsgebiete.sort();
 
+
+    // Rechtsgebiete in das Auswahlmenü eintragen
 
     rechtsgebiete.forEach(function(rechtsgebiet) {
 
@@ -95,8 +112,12 @@ function themenAktualisieren() {
         document.getElementById("themaFilter");
 
 
+    // Vorhandene Themen löschen
+
     themaFilter.innerHTML = "";
 
+
+    // "Alle Themen" wieder hinzufügen
 
     const alleOption =
         document.createElement("option");
@@ -113,6 +134,11 @@ function themenAktualisieren() {
     themaFilter.appendChild(alleOption);
 
 
+    // -------------------------------------------------
+    // Bei "Alle Rechtsgebiete" werden keine einzelnen
+    // Themen angeboten.
+    // -------------------------------------------------
+
     if (rechtsgebiet === "alle") {
 
         themaFilter.value =
@@ -123,6 +149,10 @@ function themenAktualisieren() {
 
     }
 
+
+    // -------------------------------------------------
+    // Themen des ausgewählten Rechtsgebiets sammeln
+    // -------------------------------------------------
 
     const themen =
         [...new Set(
@@ -144,8 +174,14 @@ function themenAktualisieren() {
         )];
 
 
+    // Alphabetisch sortieren
+
     themen.sort();
 
+
+    // -------------------------------------------------
+    // Themen in das Auswahlmenü eintragen
+    // -------------------------------------------------
 
     themen.forEach(function(thema) {
 
@@ -178,15 +214,21 @@ function fragenzahlAktualisieren() {
         gefilterteFragen.length;
 
 
+    // Singular oder Plural bestimmen
+
     const text =
         anzahl === 1
             ? "Frage ausgewählt"
             : "Fragen ausgewählt";
 
 
+    // Anzahl anzeigen
+
     document.getElementById("anzahlFragen").textContent =
         anzahl;
 
+
+    // Text anzeigen
 
     document.getElementById("fragenText").textContent =
         text;
@@ -212,11 +254,17 @@ function fragenFiltern() {
         document.getElementById("themaFilter").value;
 
 
+    // -------------------------------------------------
+    // Alle Fragen prüfen
+    // -------------------------------------------------
+
     gefilterteFragen =
         fragen.filter(function(frage) {
 
 
-            // Rechtsgebiet prüfen
+            // =========================================
+            // RECHTSGEBIET PRÜFEN
+            // =========================================
 
             const rechtsgebietPasst =
 
@@ -225,7 +273,9 @@ function fragenFiltern() {
                 frage.rechtsgebiet === rechtsgebiet;
 
 
-            // Thema prüfen
+            // =========================================
+            // THEMA PRÜFEN
+            // =========================================
 
             const themaPasst =
 
@@ -234,10 +284,16 @@ function fragenFiltern() {
                 frage.thema === thema;
 
 
-            // Lernmodus prüfen
+            // =========================================
+            // LERNMODUS PRÜFEN
+            // =========================================
 
             let lernmodusPasst = true;
 
+
+            // Im Fehlerfragen-Modus dürfen nur Fragen
+            // erscheinen, die aktuell auf der
+            // Fehlerliste stehen.
 
             if (lernmodus === "fehler") {
 
@@ -254,6 +310,10 @@ function fragenFiltern() {
             }
 
 
+            // =========================================
+            // ERGEBNIS DER FILTERUNG
+            // =========================================
+
             return (
                 rechtsgebietPasst &&
                 themaPasst &&
@@ -263,11 +323,23 @@ function fragenFiltern() {
         });
 
 
+    // -------------------------------------------------
+    // Fragenzähler aktualisieren
+    // -------------------------------------------------
+
     fragenzahlAktualisieren();
 
 
+    // -------------------------------------------------
+    // Letzte Frage zurücksetzen
+    // -------------------------------------------------
+
     letzteFrage = -1;
 
+
+    // -------------------------------------------------
+    // Neue Frage anzeigen
+    // -------------------------------------------------
 
     neueFrage();
 
@@ -284,7 +356,9 @@ function gewichtBerechnen(frage) {
         lernstand[frage.id];
 
 
-    // Noch nie beantwortet
+    // -------------------------------------------------
+    // Frage wurde noch nie beantwortet
+    // -------------------------------------------------
 
     if (!statistik) {
 
@@ -301,7 +375,9 @@ function gewichtBerechnen(frage) {
         statistik.falsch;
 
 
-    // Mehr falsch als richtig
+    // -------------------------------------------------
+    // Mehr falsche als richtige Antworten
+    // -------------------------------------------------
 
     if (falsch > richtig) {
 
@@ -310,7 +386,9 @@ function gewichtBerechnen(frage) {
     }
 
 
+    // -------------------------------------------------
     // Gleich viele richtige und falsche Antworten
+    // -------------------------------------------------
 
     if (falsch === richtig) {
 
@@ -319,7 +397,10 @@ function gewichtBerechnen(frage) {
     }
 
 
-    // Mindestens fünf mehr richtige als falsche Antworten
+    // -------------------------------------------------
+    // Mindestens fünf mehr richtige als falsche
+    // Antworten
+    // -------------------------------------------------
 
     if (richtig - falsch >= 5) {
 
@@ -328,7 +409,9 @@ function gewichtBerechnen(frage) {
     }
 
 
-    // Sonst mittlere Gewichtung
+    // -------------------------------------------------
+    // Sonst mittlere Wahrscheinlichkeit
+    // -------------------------------------------------
 
     return 2;
 
@@ -344,11 +427,18 @@ function gewichteteFrageAuswaehlen() {
     let lostopf = [];
 
 
+    // -------------------------------------------------
+    // Alle aktuell zugelassenen Fragen durchgehen
+    // -------------------------------------------------
+
     gefilterteFragen.forEach(function(frage, index) {
 
         const gewicht =
             gewichtBerechnen(frage);
 
+
+        // Die Frage wird entsprechend ihrem Gewicht
+        // mehrfach in den Lostopf gelegt.
 
         for (let i = 0; i < gewicht; i++) {
 
@@ -358,6 +448,10 @@ function gewichteteFrageAuswaehlen() {
 
     });
 
+
+    // -------------------------------------------------
+    // Zufällige Stelle im Lostopf auswählen
+    // -------------------------------------------------
 
     const zufallszahl =
         Math.floor(
@@ -390,6 +484,10 @@ function neueFrage() {
             document.getElementById("lernmodusFilter").value;
 
 
+        // -------------------------------------------------
+        // Unterschiedlicher Hinweis je nach Lernmodus
+        // -------------------------------------------------
+
         if (lernmodus === "fehler") {
 
             document.getElementById("frage").textContent =
@@ -405,6 +503,10 @@ function neueFrage() {
         }
 
 
+        // -------------------------------------------------
+        // Rechtsgebiet und Thema ausblenden
+        // -------------------------------------------------
+
         document.getElementById("rechtsgebiet").textContent =
             "";
 
@@ -417,6 +519,10 @@ function neueFrage() {
             "none";
 
 
+        // -------------------------------------------------
+        // Statistik der einzelnen Frage zurücksetzen
+        // -------------------------------------------------
+
         document.getElementById("frageRichtig").textContent =
             0;
 
@@ -425,9 +531,17 @@ function neueFrage() {
             0;
 
 
+        document.getElementById("frageQuote").textContent =
+            0;
+
+
         document.querySelector(".fragen-statistik").style.display =
             "none";
 
+
+        // -------------------------------------------------
+        // Antwort und Buttons ausblenden
+        // -------------------------------------------------
 
         document.getElementById("antwort").style.display =
             "none";
@@ -448,6 +562,9 @@ function neueFrage() {
 
     // -------------------------------------------------
     // Elemente wieder einblenden
+    //
+    // Das ist wichtig, wenn vorher z. B. keine
+    // Fehlerfragen vorhanden waren.
     // -------------------------------------------------
 
     document.querySelector(".trenner").style.display =
@@ -462,7 +579,7 @@ function neueFrage() {
 
 
     // -------------------------------------------------
-    // Gewichtete Frage auswählen
+    // GEWICHTETE FRAGE AUSWÄHLEN
     // -------------------------------------------------
 
     do {
@@ -479,6 +596,10 @@ function neueFrage() {
     );
 
 
+    // -------------------------------------------------
+    // Ausgewählte Frage merken
+    // -------------------------------------------------
+
     letzteFrage =
         zufallszahl;
 
@@ -488,7 +609,7 @@ function neueFrage() {
 
 
     // -------------------------------------------------
-    // Rechtsgebiet
+    // RECHTSGEBIET ANZEIGEN
     // -------------------------------------------------
 
     document.getElementById("rechtsgebiet").textContent =
@@ -496,7 +617,7 @@ function neueFrage() {
 
 
     // -------------------------------------------------
-    // Thema
+    // THEMA ANZEIGEN
     // -------------------------------------------------
 
     document.getElementById("thema").textContent =
@@ -504,7 +625,7 @@ function neueFrage() {
 
 
     // -------------------------------------------------
-    // Frage
+    // FRAGE ANZEIGEN
     // -------------------------------------------------
 
     document.getElementById("frage").textContent =
@@ -512,7 +633,7 @@ function neueFrage() {
 
 
     // -------------------------------------------------
-    // Antwort
+    // ANTWORT VORBEREITEN
     // -------------------------------------------------
 
     document.getElementById("antwort").textContent =
@@ -520,7 +641,7 @@ function neueFrage() {
 
 
     // -------------------------------------------------
-    // Bisheriger Lernstand
+    // BISHERIGEN LERNSTAND DIESER FRAGE ANZEIGEN
     // -------------------------------------------------
 
     const statistikDerFrage =
@@ -529,12 +650,45 @@ function neueFrage() {
 
     if (statistikDerFrage) {
 
-        document.getElementById("frageRichtig").textContent =
+        const richtig =
             statistikDerFrage.richtig;
 
 
-        document.getElementById("frageFalsch").textContent =
+        const falsch =
             statistikDerFrage.falsch;
+
+
+        const insgesamt =
+            richtig + falsch;
+
+
+        let frageQuote = 0;
+
+
+        // Trefferquote berechnen
+
+        if (insgesamt > 0) {
+
+            frageQuote =
+                Math.round(
+                    (richtig / insgesamt) * 100
+                );
+
+        }
+
+
+        // Werte anzeigen
+
+        document.getElementById("frageRichtig").textContent =
+            richtig;
+
+
+        document.getElementById("frageFalsch").textContent =
+            falsch;
+
+
+        document.getElementById("frageQuote").textContent =
+            frageQuote;
 
     }
 
@@ -547,11 +701,15 @@ function neueFrage() {
         document.getElementById("frageFalsch").textContent =
             0;
 
+
+        document.getElementById("frageQuote").textContent =
+            0;
+
     }
 
 
     // -------------------------------------------------
-    // Oberfläche zurücksetzen
+    // OBERFLÄCHE FÜR DIE NEUE FRAGE ZURÜCKSETZEN
     // -------------------------------------------------
 
     document.getElementById("antwort").style.display =
@@ -581,6 +739,10 @@ function statistikAktualisieren() {
     let quote = 0;
 
 
+    // -------------------------------------------------
+    // Division durch 0 vermeiden
+    // -------------------------------------------------
+
     if (bearbeitet > 0) {
 
         quote =
@@ -590,6 +752,10 @@ function statistikAktualisieren() {
 
     }
 
+
+    // -------------------------------------------------
+    // Werte anzeigen
+    // -------------------------------------------------
 
     document.getElementById("bearbeitet").textContent =
         bearbeitet;
@@ -616,6 +782,10 @@ function statistikAktualisieren() {
 document.getElementById("lernmodusFilter")
     .addEventListener("change", function() {
 
+
+        // Fragen entsprechend dem Lernmodus
+        // neu filtern.
+
         fragenFiltern();
 
     });
@@ -628,7 +798,14 @@ document.getElementById("lernmodusFilter")
 document.getElementById("rechtsgebietFilter")
     .addEventListener("change", function() {
 
+
+        // Themenmenü passend zum Rechtsgebiet
+        // neu aufbauen.
+
         themenAktualisieren();
+
+
+        // Fragen neu filtern.
 
         fragenFiltern();
 
@@ -642,6 +819,7 @@ document.getElementById("rechtsgebietFilter")
 document.getElementById("themaFilter")
     .addEventListener("change", function() {
 
+
         fragenFiltern();
 
     });
@@ -654,13 +832,20 @@ document.getElementById("themaFilter")
 document.getElementById("antwortButton")
     .addEventListener("click", function() {
 
+
+        // Antwort anzeigen
+
         document.getElementById("antwort").style.display =
             "block";
 
 
+        // Bewertungsbuttons anzeigen
+
         document.getElementById("bewertung").style.display =
             "flex";
 
+
+        // Antwort-Button ausblenden
 
         document.getElementById("antwortButton").style.display =
             "none";
@@ -676,6 +861,10 @@ document.getElementById("richtigButton")
     .addEventListener("click", function() {
 
 
+        // -------------------------------------------------
+        // Sicherheitsprüfung
+        // -------------------------------------------------
+
         if (!aktuelleFrage) {
 
             return;
@@ -683,12 +872,17 @@ document.getElementById("richtigButton")
         }
 
 
-        // Sitzungsstatistik
+        // -------------------------------------------------
+        // Sitzungsstatistik erhöhen
+        // -------------------------------------------------
 
         anzahlRichtig++;
 
 
-        // Lernstand anlegen
+        // -------------------------------------------------
+        // Lernstand anlegen, falls für diese Frage
+        // noch keiner vorhanden ist.
+        // -------------------------------------------------
 
         if (!lernstand[aktuelleFrage.id]) {
 
@@ -705,19 +899,27 @@ document.getElementById("richtigButton")
         }
 
 
+        // -------------------------------------------------
         // Richtige Antwort zählen
+        // -------------------------------------------------
 
         lernstand[aktuelleFrage.id].richtig++;
 
+
+        // -------------------------------------------------
+        // Aktuellen Lernmodus bestimmen
+        // -------------------------------------------------
 
         const lernmodus =
             document.getElementById("lernmodusFilter").value;
 
 
         // -------------------------------------------------
-        // Nur im Fehlerfragen-Modus wird die Frage nach
-        // einer richtigen Antwort von der Fehlerliste
-        // entfernt.
+        // FEHLERFRAGEN-MODUS
+        //
+        // Nur wenn die Frage im Fehlerfragen-Modus
+        // richtig beantwortet wurde, wird sie von
+        // der Fehlerliste entfernt.
         // -------------------------------------------------
 
         if (lernmodus === "fehler") {
@@ -728,14 +930,27 @@ document.getElementById("richtigButton")
         }
 
 
+        // -------------------------------------------------
+        // Lernstand speichern
+        // -------------------------------------------------
+
         lernstandSpeichern();
 
+
+        // -------------------------------------------------
+        // Sitzungsstatistik aktualisieren
+        // -------------------------------------------------
 
         statistikAktualisieren();
 
 
-        // Im Fehlerfragen-Modus neu filtern,
-        // weil die Frage gerade entfernt wurde.
+        // -------------------------------------------------
+        // NÄCHSTE FRAGE
+        //
+        // Im Fehlerfragen-Modus muss neu gefiltert
+        // werden, weil die richtig beantwortete Frage
+        // gerade aus der Fehlerliste entfernt wurde.
+        // -------------------------------------------------
 
         if (lernmodus === "fehler") {
 
@@ -760,6 +975,10 @@ document.getElementById("falschButton")
     .addEventListener("click", function() {
 
 
+        // -------------------------------------------------
+        // Sicherheitsprüfung
+        // -------------------------------------------------
+
         if (!aktuelleFrage) {
 
             return;
@@ -767,12 +986,17 @@ document.getElementById("falschButton")
         }
 
 
-        // Sitzungsstatistik
+        // -------------------------------------------------
+        // Sitzungsstatistik erhöhen
+        // -------------------------------------------------
 
         anzahlFalsch++;
 
 
-        // Lernstand anlegen
+        // -------------------------------------------------
+        // Lernstand anlegen, falls für diese Frage
+        // noch keiner vorhanden ist.
+        // -------------------------------------------------
 
         if (!lernstand[aktuelleFrage.id]) {
 
@@ -789,7 +1013,9 @@ document.getElementById("falschButton")
         }
 
 
+        // -------------------------------------------------
         // Falsche Antwort zählen
+        // -------------------------------------------------
 
         lernstand[aktuelleFrage.id].falsch++;
 
@@ -802,11 +1028,23 @@ document.getElementById("falschButton")
             true;
 
 
+        // -------------------------------------------------
+        // Lernstand speichern
+        // -------------------------------------------------
+
         lernstandSpeichern();
 
 
+        // -------------------------------------------------
+        // Sitzungsstatistik aktualisieren
+        // -------------------------------------------------
+
         statistikAktualisieren();
 
+
+        // -------------------------------------------------
+        // Nächste Frage anzeigen
+        // -------------------------------------------------
 
         neueFrage();
 
@@ -865,11 +1103,15 @@ document.getElementById("resetButton")
         anzahlFalsch = 0;
 
 
+        // -------------------------------------------------
+        // Sitzungsstatistik aktualisieren
+        // -------------------------------------------------
+
         statistikAktualisieren();
 
 
         // -------------------------------------------------
-        // Fragen neu laden
+        // Fragen neu filtern und neue Frage anzeigen
         // -------------------------------------------------
 
         fragenFiltern();
@@ -890,10 +1132,26 @@ document.getElementById("resetButton")
 // 19. PROGRAMM STARTEN
 // =====================================================
 
+
+// Rechtsgebiete aus fragen.js einlesen
+
 filterInitialisieren();
+
+
+// Themenmenü aufbauen
 
 themenAktualisieren();
 
+
+// Sitzungsstatistik anzeigen
+
 statistikAktualisieren();
+
+
+// Fragen anhand der aktuellen Auswahl filtern.
+//
+// Dadurch wird gleichzeitig:
+// 1. der Fragenzähler aktualisiert
+// 2. die erste Frage angezeigt
 
 fragenFiltern();
