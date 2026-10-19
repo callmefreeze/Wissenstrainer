@@ -582,3 +582,37 @@ button:active {
     }
 
 }
+/* Antwortgliederung mit Symbolen und eingerückten Unterpunkten */
+#antwort .antwort-liste,
+#antwort .antwort-liste ul {
+    list-style: none;
+    padding-left: 1.4em;
+    margin: 0;
+}
+#antwort .antwort-liste ul {
+    margin-top: 0.4em;
+}
+#antwort .antwort-liste li {
+    position: relative;
+    margin-bottom: 0.45em;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+#antwort .listen-symbol {
+    position: absolute;
+    left: -1.3em;
+    width: 1em;
+    color: #4b6b83;
+}
+
+/* Zeilenumbrüche auch bei einer Ausgabe als einfachem Text erhalten. */
+#antwort {
+    white-space: pre-wrap;
+}
+/* Die Listen übernehmen Abstände und Umbrüche selbst. */
+#antwort .antwort-liste {
+    white-space: normal;
+}
+#antwort .antwort-liste li {
+    display: list-item;
+}

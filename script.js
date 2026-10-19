@@ -1,3 +1,30 @@
+function antwortDarstellen(text) {
+    const container = document.getElementById("antwort");
+    container.replaceChildren();
+    const root = document.createElement("ul");
+    root.className = "antwort-liste";
+    container.appendChild(root);
+    const listen = [root];
+    for (const zeile of text.split("\n")) {
+        const treffer = zeile.match(/^( *)([•▸◦]) (.*)$/);
+        if (!treffer) continue;
+        const ebene = treffer[1].length / 2;
+        while (listen.length > ebene + 1) listen.pop();
+        while (listen.length < ebene + 1) {
+            const unterliste = document.createElement("ul");
+            listen[listen.length - 1].lastElementChild.appendChild(unterliste);
+            listen.push(unterliste);
+        }
+        const punkt = document.createElement("li");
+        const symbol = document.createElement("span");
+        symbol.className = "listen-symbol";
+        symbol.setAttribute("aria-hidden", "true");
+        symbol.textContent = treffer[2];
+        punkt.append(symbol, document.createTextNode(treffer[3]));
+        listen[ebene].appendChild(punkt);
+    }
+}
+
 // =====================================================
 // 1. VARIABLEN
 // =====================================================
@@ -636,8 +663,7 @@ function neueFrage() {
     // ANTWORT VORBEREITEN
     // -------------------------------------------------
 
-    document.getElementById("antwort").textContent =
-        aktuelleFrage.antwort;
+    antwortDarstellen(aktuelleFrage.antwort);
 
 
     // -------------------------------------------------
